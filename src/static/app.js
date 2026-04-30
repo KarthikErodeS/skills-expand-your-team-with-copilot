@@ -571,10 +571,10 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="share-buttons">
         <span class="share-label">Share:</span>
-        <button class="share-btn share-twitter" title="Share on Twitter" data-activity="${name}" data-schedule="${formattedSchedule}">𝕏</button>
-        <button class="share-btn share-facebook" title="Share on Facebook" data-activity="${name}">f</button>
-        <button class="share-btn share-whatsapp" title="Share on WhatsApp" data-activity="${name}" data-schedule="${formattedSchedule}">💬</button>
-        <button class="share-btn share-copy" title="Copy link" data-activity="${name}">🔗</button>
+        <button class="share-btn share-twitter" aria-label="Share on Twitter" title="Share on Twitter" data-activity="${name}" data-schedule="${formattedSchedule}">𝕏</button>
+        <button class="share-btn share-facebook" aria-label="Share on Facebook" title="Share on Facebook" data-activity="${name}">f</button>
+        <button class="share-btn share-whatsapp" aria-label="Share on WhatsApp" title="Share on WhatsApp" data-activity="${name}" data-schedule="${formattedSchedule}">💬</button>
+        ${navigator.clipboard ? `<button class="share-btn share-copy" aria-label="Copy link" title="Copy link" data-activity="${name}">🔗</button>` : ""}
       </div>
     `;
 
@@ -610,20 +610,25 @@ document.addEventListener("DOMContentLoaded", () => {
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     });
 
-    activityCard.querySelector(".share-copy").addEventListener("click", (event) => {
-      const text = `${name} — ${details.description} | Schedule: ${formattedSchedule} | ${window.location.href}`;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = event.currentTarget;
-        btn.textContent = "✔";
-        btn.title = "Copied!";
-        setTimeout(() => {
-          btn.textContent = "🔗";
-          btn.title = "Copy link";
-        }, 2000);
-      }).catch(() => {
-        showMessage("Could not copy to clipboard.", "error");
+    const copyBtn = activityCard.querySelector(".share-copy");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", (event) => {
+        const text = `${name} — ${details.description} | Schedule: ${formattedSchedule} | ${window.location.href}`;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = event.currentTarget;
+          btn.textContent = "✔";
+          btn.setAttribute("aria-label", "Copied!");
+          btn.title = "Copied!";
+          setTimeout(() => {
+            btn.textContent = "🔗";
+            btn.setAttribute("aria-label", "Copy link");
+            btn.title = "Copy link";
+          }, 2000);
+        }).catch(() => {
+          showMessage("Could not copy to clipboard.", "error");
+        });
       });
-    });
+    }
 
     activitiesList.appendChild(activityCard);
   }
