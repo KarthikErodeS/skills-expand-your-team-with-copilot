@@ -762,7 +762,8 @@ body.dark-mode .search-box input {
 /* Form inputs in dark mode */
 body.dark-mode input[type="text"],
 body.dark-mode input[type="email"],
-body.dark-mode input[type="password"] {
+body.dark-mode input[type="password"],
+body.dark-mode textarea {
   background-color: var(--surface);
   color: var(--text-primary);
   border-color: var(--border);
